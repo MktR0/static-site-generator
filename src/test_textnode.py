@@ -36,12 +36,12 @@ class TestTextNode(unittest.TestCase):
         self.assertNotEqual(node, node2)
 
     def test_repr(self):
-        node = TextNode("This is a text node", TextType.BOLD, "https://docs.python.org/3/howto/enum.html")
-        self.assertNotEqual(
-                "TextNode(This is a text node, bold, https://docs.python.org/3/howto/enum.html)", repr(node)
-                )
+        node = TextNode("This is a text node", TextType.TEXT,"https://docs.python.org/3/howto/enum.html" )
+        self.assertEqual(
+            "TextNode(This is a text node, text, https://docs.python.org/3/howto/enum.html)", repr(node)
+            )
+
+
 
 if __name__ == "__main__":
     unittest.main()
-
-

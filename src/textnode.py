@@ -50,6 +50,6 @@ def text_node_to_html_node(text_node):
         if not text_node.text:
             raise ValueError("Node requires alt text")
         return LeafNode("img","",props={"src": text_node.url, "alt":text_node.text})
-    raise ValueError("Invalid text type")
+    raise ValueError(f"Invalid text type: {text_node.text_type}")
 
 

@@ -2,11 +2,14 @@ import re
 
 def markdown_to_blocks(markdown):
     # This would normalize line endings before splitting
-    markdown = re.sub(r'\r\n', '\n', markdown)
-    markdown_block = re.split(r'\n\n+', markdown)
-    markdown_block = list(filter(lambda a: a != "", markdown_block))
+    normalized_content = re.sub(r'\r\n', '\n', markdown)
+    raw_blocks = re.split(r'\n\n+', normalized_content)
+    non_empty_blocks = list(filter(lambda a: a != "", raw_blocks))
 
-    def stripper(line):
+    # TODO: Consider extracting this function
+    def normalize_whitespace(line):
         return "\n".join(re.split(r'\n\s+^\t',line)).strip()
     
-    return list(map(stripper,markdown_block))
+    return list(map(normalize_whitespace,non_empty_blocks))
+
+

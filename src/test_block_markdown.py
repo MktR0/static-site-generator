@@ -1,20 +1,12 @@
-import unittest
 import re
-from block_markdown import (
-        markdown_to_blocks,
-        block_to_block_type,
-        block_type_heading,
-        block_type_paragraph,
-        block_type_code,
-        block_type_quote,
-        block_type_olist,
-        block_type_ulist,
-        is_heading,
-        is_code_block,
-        is_quote_block,
-        is_olist,
-        is_ulist_block
-        )
+import unittest
+
+from block_markdown import (block_to_block_type, block_type_code,
+                            block_type_heading, block_type_olist,
+                            block_type_paragraph, block_type_quote,
+                            block_type_ulist, is_code_block, is_heading,
+                            is_olist, is_quote_block, is_ulist_block,
+                            markdown_to_blocks)
 
 is_heading_expected_results = [True, True, True, True, True, True, False, False]
 is_code_expected_results = [True, True, True, True, False, False, False, False]
@@ -173,7 +165,6 @@ This is the same paragraph on a new line
             ],
         )
 
-
     def test_markdown_to_blocks_non_standard_spacing_cases(self):
         """
         Because windows and people who use tabs instead of spaces
@@ -184,26 +175,22 @@ This is the same paragraph on a new line
         - Excessive spacing
         """
         cases = [
-                "Spaced first line\nSecond line\n\nNew block",
-                "First block\n\tIndented with tab\n\nSecond block",
-                "First block\r\n\r\nSecond block",
-                "First block\n\nSecond block\n\n\n"
-                ]
+            "Spaced first line\nSecond line\n\nNew block",
+            "First block\n\tIndented with tab\n\nSecond block",
+            "First block\r\n\r\nSecond block",
+            "First block\n\nSecond block\n\n\n",
+        ]
 
         expected_results = [
-
-                [ "Spaced first line\nSecond line", "New block"],
-                ["First block\n\tIndented with tab", "Second block"],
-                ["First block", "Second block"],
-                ["First block","Second block"]
-
-                ]
-
+            ["Spaced first line\nSecond line", "New block"],
+            ["First block\n\tIndented with tab", "Second block"],
+            ["First block", "Second block"],
+            ["First block", "Second block"],
+        ]
 
         for n, case in enumerate(cases):
             blocks = markdown_to_blocks(case)
             self.assertListEqual(blocks, expected_results[n])
-
 
     def test_block_to_block_type(self):
         block = "# heading"
@@ -219,7 +206,6 @@ This is the same paragraph on a new line
         block = "paragraph"
         self.assertEqual(block_to_block_type(block), block_type_paragraph)
 
-
     def test_all_block_helper_functions(self):
         """Tests all block_to_block_type helper functions against known test cases.
 
@@ -229,51 +215,51 @@ This is the same paragraph on a new line
             - Quote block detection (> prefix)
             - Unordered list detection (* or -)
             - Ordered list detection (numbers)
-                
+
             Each test case includes valid and invalid formats,
             edge cases, and nested structures.
             Includes log file for debugging
-            """
-        test_docs = [ test_heading_doc,
-                test_code_doc,
-                test_quote_doc,
-                test_ulist_doc,
-                test_olist_doc
-            ]
+        """
+        test_docs = [
+            test_heading_doc,
+            test_code_doc,
+            test_quote_doc,
+            test_ulist_doc,
+            test_olist_doc,
+        ]
 
         functions = [
-                is_heading,
-                is_code_block,
-                is_quote_block,
-                is_ulist_block,
-                is_olist 
-                ]
+            is_heading,
+            is_code_block,
+            is_quote_block,
+            is_ulist_block,
+            is_olist,
+        ]
 
         expected_results = [
-                is_heading_expected_results,
-                is_code_expected_results,
-                is_quote_expected_results,
-                is_ulist_expected_results,
-                is_olist_expected_results
-                ]
+            is_heading_expected_results,
+            is_code_expected_results,
+            is_quote_expected_results,
+            is_ulist_expected_results,
+            is_olist_expected_results,
+        ]
 
         func_names = [
-                'is_heading_expected_results', 
-                'is_code_expected_results',
-                'is_quote_expected_results',
-                'is_ulist_expected_results', 
-                'is_olist_expected_results'
-                ]
+            "is_heading_expected_results",
+            "is_code_expected_results",
+            "is_quote_expected_results",
+            "is_ulist_expected_results",
+            "is_olist_expected_results",
+        ]
 
         def format_test_block(doc):
             # add handling windows endline \r\n
-            normalized_doc = re.sub(r'\r\n', '\n', doc)
-            blocks = re.split("\n\n+",normalized_doc)
+            normalized_doc = re.sub(r"\r\n", "\n", doc)
+            blocks = re.split("\n\n+", normalized_doc)
             blocks = list(filter(lambda a: a != "", blocks))
             return blocks
 
-
-        with open("helper_test_log.txt","w") as file:
+        with open("helper_test_log.txt", "w") as file:
             file.write(f"{'~'*50}\n")
             file.write("Logger for my Helper Function Test\n")
             file.write(f"{'~'*50}\n\n")
@@ -282,16 +268,16 @@ This is the same paragraph on a new line
             test_case = format_test_block(test_doc)
             function = functions[i]
             expected_result = expected_results[i]
-            
-            with open("helper_test_log.txt","+a") as file:
+
+            with open("helper_test_log.txt", "+a") as file:
                 file.write(f"[~{('_'.join((func_names[i]).split('_')[:2]))}~]\n\n")
 
             check = " "
             for n, block in enumerate(test_case):
                 actual_result = function(block)
-                self.assertEqual(expected_result[n], actual_result) 
+                self.assertEqual(expected_result[n], actual_result)
                 check = "✓"
-                with open("helper_test_log.txt","+a") as file:
+                with open("helper_test_log.txt", "+a") as file:
                     length = len(f"< Test Case: {n+1} >\n")
                     file.write(f"{'='*length}\n")
                     file.write(f"< Test Case: {n+1} >\n")
@@ -301,8 +287,6 @@ This is the same paragraph on a new line
                     file.write(f"[{check}] Actual = {actual_result}\n")
                     file.write(f"[{check}] Expected = {expected_result[n]}\n")
                     file.write(f"{'-'*50}\n\n")
-
-
 
 
 if __name__ == "__main__":

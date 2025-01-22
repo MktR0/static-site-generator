@@ -1,5 +1,7 @@
 import unittest
-from htmlnode import HTMLNode, ParentNode, LeafNode
+
+from htmlnode import HTMLNode, LeafNode, ParentNode
+
 
 class TestHTMLNode(unittest.TestCase):
     def test_repr(self):
@@ -105,7 +107,6 @@ class TestHTMLNode(unittest.TestCase):
         self.assertEqual(
             parent_node.to_html(), "<div><span><b>grandchild</b></span></div>"
         )
-
 
 
 if __name__ == "__main__":

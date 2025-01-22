@@ -1,12 +1,21 @@
 import re
 import unittest
 
-from block_markdown import (block_to_block_type, block_type_code,
-                            block_type_heading, block_type_olist,
-                            block_type_paragraph, block_type_quote,
-                            block_type_ulist, is_code_block, is_heading,
-                            is_olist, is_quote_block, is_ulist_block,
-                            markdown_to_blocks)
+from block_markdown import (
+    block_to_block_type,
+    block_type_code,
+    block_type_heading,
+    block_type_olist,
+    block_type_paragraph,
+    block_type_quote,
+    block_type_ulist,
+    is_code_block,
+    is_heading,
+    is_olist,
+    is_quote_block,
+    is_ulist_block,
+    markdown_to_blocks,
+)
 
 is_heading_expected_results = [True, True, True, True, True, True, False, False]
 is_code_expected_results = [True, True, True, True, False, False, False, False]

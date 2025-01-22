@@ -114,15 +114,19 @@ def is_olist(block):
         pattern = r"^\d\.\s"
         matches = re.search(pattern, block)
         if not matches:
-            return False
+            return ""
         return matches.group()
 
     inner_blocks = split_inner_text(block)
-    # checks 1st exists and is '1'
-    if not get_match(inner_blocks[0]) or get_match(inner_blocks[0])[:1] != "1":
+
+    # checks 1st block exists and starts with '1'
+    first_match = get_match(inner_blocks[0])
+    if not first_match or first_match[:1] != "1":
         return False
+
     # increment by '1'
     for line in range(1, len(inner_blocks)):
-        if get_match(inner_blocks[line])[:1] != str(line + 1):
+        match = get_match(inner_blocks[line])
+        if not match or match[:1] != str(line + 1):
             return False
     return True

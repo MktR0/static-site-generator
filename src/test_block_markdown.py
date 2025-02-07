@@ -15,6 +15,7 @@ from block_markdown import (
     is_quote_block,
     is_ulist_block,
     markdown_to_blocks,
+    markdown_to_html_node,
 )
 
 is_heading_expected_results = [True, True, True, True, True, True, False, False]
@@ -296,6 +297,204 @@ This is the same paragraph on a new line
                     file.write(f"[{check}] Actual = {actual_result}\n")
                     file.write(f"[{check}] Expected = {expected_result[n]}\n")
                     file.write(f"{'-'*50}\n\n")
+
+    def test_paragraph(self):
+        md = """
+This is **bolded** paragraph
+text in a p
+tag here
+
+"""
+
+        node = markdown_to_html_node(md)
+        html = node.to_html()
+        self.assertEqual(
+            html,
+            "<div><p>This is <b>bolded</b> paragraph text in a p tag here</p></div>",
+        )
+
+    def test_paragraphs(self):
+        md = """
+This is **bolded** paragraph
+text in a p
+tag here
+
+This is another paragraph with *italic* text and `code` here
+
+"""
+
+        node = markdown_to_html_node(md)
+        html = node.to_html()
+        self.assertEqual(
+            html,
+            "<div><p>This is <b>bolded</b> paragraph text in a p tag here</p><p>This is another paragraph with <i>italic</i> text and <code>code</code> here</p></div>",
+        )
+
+    def test_lists(self):
+        md = """
+- This is a list
+- with items
+- and *more* items
+
+1. This is an `ordered` list
+2. with items
+3. and more items
+
+"""
+
+        node = markdown_to_html_node(md)
+        html = node.to_html()
+        self.assertEqual(
+            html,
+            "<div><ul><li>This is a list</li><li>with items</li><li>and <i>more</i> items</li></ul><ol><li>This is an <code>ordered</code> list</li><li>with items</li><li>and more items</li></ol></div>",
+        )
+
+    def test_headings(self):
+        md = """
+# this is an h1
+
+this is paragraph text
+
+## this is an h2
+"""
+
+        node = markdown_to_html_node(md)
+        html = node.to_html()
+        self.assertEqual(
+            html,
+            "<div><h1>this is an h1</h1><p>this is paragraph text</p><h2>this is an h2</h2></div>",
+        )
+
+    def test_blockquote(self):
+        md = """
+> This is a
+> blockquote block
+
+this is paragraph text
+
+"""
+
+        node = markdown_to_html_node(md)
+        html = node.to_html()
+        self.assertEqual(
+            html,
+            "<div><blockquote>This is a blockquote block</blockquote><p>this is paragraph text</p></div>",
+        )
+
+    def test_full_example(self):
+        md = """# Markdown syntax guide
+
+## Headers
+
+# This is a Heading h1
+
+## This is a Heading h2
+
+###### This is a Heading h6
+
+## Emphasis
+
+*This text will be italic*  
+*This will also be italic*
+
+**This text will be bold**  
+**This will also be bold**
+
+*You can* **combine them**
+
+## Lists
+
+### Unordered
+
+* Item 1
+* Item 2
+* Item 2a
+* Item 2b
+
+
+### Ordered
+
+1. Item 1
+2. Item 2
+3. Item 3
+
+
+## Images
+
+![This is an alt text.](/image/sample.webp)
+
+## Links
+
+You may be using [Markdown Live Preview](https://markdownlivepreview.com/).
+
+## Blockquotes
+
+> Markdown is a lightweight markup language with plain-text-formatting syntax, created in 2004 by John Gruber with Aaron Swartz.
+
+> Markdown is often used to format readme files, for writing messages in online discussion forums, and to create rich text using a plain text editor.
+
+
+## Blocks of code
+
+```
+let message = 'Hello world';
+alert(message);
+```
+
+## Inline code
+
+This web site is using `markedjs/marked`.
+"""
+        expected_output = """<div><h1>Markdown syntax guide</h1>
+<h2>Headers</h2>
+<h1>This is a Heading h1</h1>
+<h2>This is a Heading h2</h2>
+<h6>This is a Heading h6</h6>
+<h2>Emphasis</h2>
+<p><i>This text will be italic</i><i>This will also be italic</i></p>
+<p><b>This text will be bold</b><b>This will also be bold</b></p>
+<p><i>You can</i><b>combine them</b></p>
+<h2>Lists</h2>
+<h3>Unordered</h3>
+<ul>
+<li>Item 1</li>
+<li>Item 2</li>
+<li>Item 2a</li>
+<li>Item 2b</li>
+</ul>
+<h3>Ordered</h3>
+<ol>
+<li>Item 1</li>
+<li>Item 2</li>
+<li>Item 3</li>
+</ol>
+<h2>Images</h2>
+<p><imgsrc="/image/sample.webp"alt="Thisisanalttext."></img></p>
+<h2>Links</h2>
+<p>You may be using <a href="https://markdownlivepreview.com/">Markdown Live Preview</a>.</p>
+<h2>Blockquotes</h2>
+<blockquote>
+Markdown is a lightweight markup language with plain-text-formatting syntax, created in 2004 by John Gruber with Aaron Swartz.
+</blockquote>
+<blockquote>
+Markdown is often used to format readme files, for writing messages in online discussion forums, and to create rich text using a plain text editor.
+</blockquote>
+<h2>Blocks of code</h2>
+<pre><code>let message = 'Hello world';
+alert(message);
+</code></pre>
+<h2>Inline code</h2>
+<p>This web site is using <code>markedjs/marked</code>.</p>
+</div>"""
+
+        self.maxDiff = None
+
+        def format_test_block(html: str) -> str:
+            return "".join(html.split())
+
+        node = markdown_to_html_node(md)
+        html = node.to_html()
+        self.assertEqual(format_test_block(html), format_test_block(expected_output))
 
 
 if __name__ == "__main__":

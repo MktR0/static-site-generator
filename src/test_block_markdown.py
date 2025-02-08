@@ -269,34 +269,14 @@ This is the same paragraph on a new line
             blocks = list(filter(lambda a: a != "", blocks))
             return blocks
 
-        with open("helper_test_log.txt", "w") as file:
-            file.write(f"{'~'*50}\n")
-            file.write("Logger for my Helper Function Test\n")
-            file.write(f"{'~'*50}\n\n")
-
         for i, test_doc in enumerate(test_docs):
             test_case = format_test_block(test_doc)
             function = functions[i]
             expected_result = expected_results[i]
 
-            with open("helper_test_log.txt", "+a") as file:
-                file.write(f"[~{('_'.join((func_names[i]).split('_')[:2]))}~]\n\n")
-
-            check = " "
             for n, block in enumerate(test_case):
                 actual_result = function(block)
                 self.assertEqual(expected_result[n], actual_result)
-                check = "✓"
-                with open("helper_test_log.txt", "+a") as file:
-                    length = len(f"< Test Case: {n+1} >\n")
-                    file.write(f"{'='*length}\n")
-                    file.write(f"< Test Case: {n+1} >\n")
-                    file.write(f"{'='*length}\n")
-                    file.write(f"{'-'*50}\n")
-                    file.write(f"Test Block = '''{block}'''\n")
-                    file.write(f"[{check}] Actual = {actual_result}\n")
-                    file.write(f"[{check}] Expected = {expected_result[n]}\n")
-                    file.write(f"{'-'*50}\n\n")
 
     def test_paragraph(self):
         md = """
@@ -487,7 +467,7 @@ alert(message);
 <p>This web site is using <code>markedjs/marked</code>.</p>
 </div>"""
 
-        self.maxDiff = None
+        #self.maxDiff = None
 
         def format_test_block(html: str) -> str:
             return "".join(html.split())

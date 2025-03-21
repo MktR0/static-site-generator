@@ -79,6 +79,19 @@ class TestInlineMarkdown(unittest.TestCase):
             new_nodes,
         )
 
+    def test_delim_both_italic(self):
+        node = TextNode("_underscored italic_ and *star italic*", TextType.TEXT)
+        new_nodes = split_nodes_delimiter([node], "_", TextType.ITALIC)
+        new_nodes = split_nodes_delimiter(new_nodes, "*", TextType.ITALIC)
+        self.assertListEqual(
+            [
+                TextNode("underscored italic", TextType.ITALIC),
+                TextNode(" and ", TextType.TEXT),
+                TextNode("star italic", TextType.ITALIC),
+            ],
+            new_nodes,
+        )
+
     def test_delim_code(self):
         node = TextNode("This is text with a `code block` word", TextType.TEXT)
         new_nodes = split_nodes_delimiter([node], "`", TextType.CODE)

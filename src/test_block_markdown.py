@@ -467,7 +467,7 @@ alert(message);
 <p>This web site is using <code>markedjs/marked</code>.</p>
 </div>"""
 
-        #self.maxDiff = None
+        # self.maxDiff = None
 
         def format_test_block(html: str) -> str:
             return "".join(html.split())

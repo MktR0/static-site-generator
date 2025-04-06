@@ -1,3 +1,4 @@
+import os
 import re
 from block_markdown import markdown_to_html_node
 
@@ -30,3 +31,34 @@ def generate_page(from_path, template_path, dest_path):
         file.write(template)
         file.write("\n")
     print(f"Generated {title} at {dest_path}")
+
+
+def generate_pages_recursive(
+    dir_path_content, dest_dir_path, template_path, ignore_list=None
+):
+
+    if not os.path.exists(dest_dir_path):
+        os.makedirs(dest_dir_path)
+
+    directory_contents = os.listdir(dir_path_content)
+    if ignore_list is not None:
+        directory_contents = [
+            file
+            for file in os.listdir(dir_path_content)
+            if file not in ignore_list and not file.startswith((".", ""))
+        ]
+
+    for item in directory_contents:
+        source_content = os.path.join(dir_path_content, item)
+        dest_content = os.path.join(dest_dir_path, item)
+        print(f" {source_content} -> {dest_content}")
+
+        if os.path.isfile(source_content) and source_content.endswith(".md"):
+            dest_content = dest_content[:-3] + ".html"
+            generate_page(source_content, template_path, dest_content)
+        elif os.path.isdir(source_content):
+            generate_pages_recursive(
+                source_content, dest_content, template_path, ignore_list
+            )
+        else:
+            print(f"Non-markdown content detect: {source_content}")

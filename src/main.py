@@ -5,10 +5,10 @@ from copystatic import copy_contents_recursive
 from generate_content import generate_pages_recursive
 
 source = "./static"
-destination = "./public"
+destination = "./docs"
 
 from_path = "./content"
-dest_path = "./public"
+dest_path = "./docs"
 template_path = "./template.html"
 
 
